@@ -7,7 +7,7 @@ end
 
 class Connection < EventMachine::Connection
   # needed
-  attr_accessor :playlist, :current_song, :state
+  attr_accessor :current_song, :state
   attr_accessor :volume, :repeat, :random
   attr_accessor :elapsed, :total
 
@@ -156,7 +156,7 @@ class Connection < EventMachine::Connection
     end
 
     puts "PlAYLISTA: " + a.inspect
-    @playlist = a
+    @playlist["songs"] = a
   end
 
   def handle_playlist(msg)
@@ -177,6 +177,7 @@ class Connection < EventMachine::Connection
 
 
   def handle_status(msg)
+    debug "1"
     status = {}
     msg.each_line { |line| 
       k, v = line.split ": "
@@ -185,7 +186,7 @@ class Connection < EventMachine::Connection
 
     # If there is a song in list that is current
     if status["song"]
-      @current_song = status["song"]
+      @current_song = status["song"].to_i
       @current_songid = status["songid"].to_i
       @bitrate = status["bitrate"].to_i
     end
@@ -193,8 +194,9 @@ class Connection < EventMachine::Connection
     @volume = status["volume"].to_i
     @repeat = status["repeat"] == "1" ? true : false
     @random = status["random"] == "1" ? true : false
-    @playlist["length"] = status["playlistlength"].to_i
+
     @playlist["version"] = status["playlist"].to_i
+    @playlist["length"] = status["playlistlength"].to_i
     @state = status["state"]
 
     puts status.inspect
@@ -214,9 +216,13 @@ class Connection < EventMachine::Connection
       # But for now send idle
 
       #@queue.push "status"
-      @queue.push "idle"
+      changed = msg.split ": "
+      if changed[1] = "player\n"
+        @queue.push "status"
+        send_command "status"
+      end
 
-      #send_command "status"
+      @queue.push "idle"
       send_command "idle"
     end
   end
