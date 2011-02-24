@@ -2,12 +2,12 @@ require "rubygems"
 require "eventmachine"
 
 def debug(msg)
-  puts ":: #{msg}"
+  #puts ":: #{msg}"
 end
 
 class Connection < EventMachine::Connection
   # needed
-  attr_accessor :current_song, :state
+  attr_accessor :current_song, :state, :playlist
   attr_accessor :volume, :repeat, :random
   attr_accessor :elapsed, :total
 
@@ -46,9 +46,9 @@ class Connection < EventMachine::Connection
   # Perform actions on new data from server
   def receive_data(msg)
     debug "\t\t-receive_data"
-    puts "------------"
-    puts msg
-    puts "------------"
+    debug "------------"
+    debug msg
+    debug "------------"
 
     msgs = split_message msg
     debug "How many messages: #{msgs.size}"
@@ -84,22 +84,32 @@ class Connection < EventMachine::Connection
     @connected
   end
 
-  def state_change(command)
+  def state_change(command=nil)
+    @beats = 0
     current_state = @state
-    if command == "pause"
-      if current_state == "play" 
+    if command
+      if command == "pause"
+        if current_state == "play" 
+          cancel_timer
+          @state = "pause"
+        else
+          start_timer
+          @state = "play"
+        end
+      elsif command == "stop"
+        @state = "stop"
         cancel_timer
-        @state = "pause"
-      else
+      elsif command == "play"
         start_timer
         @state = "play"
       end
-    elsif command == "stop"
-      @state = "stop"
-      cancel_timer
-    elsif command == "play"
-      start_timer
-      @state = "play"
+    else
+      if current_state == "play"
+        cancel_timer
+        start_timer
+      else
+        cancel_timer
+      end
     end
 
   end
@@ -118,11 +128,38 @@ class Connection < EventMachine::Connection
   end
 
   def start_timer
-    @timer = EM::PeriodicTimer.new(1) do
-      puts Time.now
-    end
+    if ! @timer
+      difference = @elapsed.ceil - @elapsed
+      puts "DIFFERENCE #{difference}"
+      @elapsed = @elapsed.ceil
+      @dupa = Time.new.to_f
+      puts "dupa #{@dupa}"
+      if difference > 0.1
+        puts "Shot Timer"
+        EM::Timer.new(difference) { start_heartbeat_timer }
+      else
+        start_heartbeat_timer
+      end # @difference
+    end # @timer
   end
 
+  def start_heartbeat_timer
+      @beats = 0
+      @timer = EM::PeriodicTimer.new(1) do
+        @beats += 1
+        @elapsed += 1
+        @int = @elapsed.to_i
+        m = @int / 60
+        s = @int % 60
+        @dupa = Time.new.to_f - @dupa
+        puts "ELAPSED TIME: #{m}:#{s} (#{@elapsed}), beats: #{@beats}, time #{@dupa}"
+        if @beats > 15
+          execute "status"
+          send_idle
+          @beats = 0
+        end
+      end # EM::PeriodicTimer
+  end
   def send_command(cmd)
     debug "SEND : #{cmd}"
     send_data cmd + "\r\n"
@@ -155,7 +192,7 @@ class Connection < EventMachine::Connection
       end
     end
 
-    puts "PlAYLISTA: " + a.inspect
+    debug "PlAYLISTA: " + a.inspect
     @playlist["songs"] = a
   end
 
@@ -172,7 +209,7 @@ class Connection < EventMachine::Connection
     }
 
     @playlist["songs"] = a
-    puts a.inspect
+    debug a.inspect
   end
 
 
@@ -184,12 +221,18 @@ class Connection < EventMachine::Connection
       status[k] = v[0..-2]
     }
 
+
     # If there is a song in list that is current
     if status["song"]
       @current_song = status["song"].to_i
       @current_songid = status["songid"].to_i
       @bitrate = status["bitrate"].to_i
+      @elapsed = status["elapsed"].to_f
     end
+
+    puts "#{Time.new.to_f}"
+    @state = status["state"]
+    state_change
 
     @volume = status["volume"].to_i
     @repeat = status["repeat"] == "1" ? true : false
@@ -197,7 +240,6 @@ class Connection < EventMachine::Connection
 
     @playlist["version"] = status["playlist"].to_i
     @playlist["length"] = status["playlistlength"].to_i
-    @state = status["state"]
 
     puts status.inspect
   end
@@ -222,14 +264,13 @@ class Connection < EventMachine::Connection
         send_command "status"
       end
 
-      @queue.push "idle"
-      send_command "idle"
+      send_idle
+
     end
   end
 
   def handle_idle_after_our_action(msg)
-    @queue.push "idle"
-    send_command "idle"
+    send_idle
   end
 
   def handle_noidle(msg)
@@ -249,6 +290,11 @@ class Connection < EventMachine::Connection
   def handle_stop(msg)
     @queue.push "idle_after_our_action"
     send_command "idle"
+  end
+
+  def send_idle
+      @queue.push "idle"
+      send_command "idle"
   end
 
 end

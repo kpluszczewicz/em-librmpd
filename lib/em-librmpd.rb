@@ -9,10 +9,6 @@ require "eventmachine"
 require "connection.rb"
 
 
-def debug(msg)
-  puts ":: #{msg}"
-end
-
 # Main class em-libmpd library
 class MPD 
   attr_accessor :player, :current_song
@@ -29,6 +25,8 @@ class MPD
     # EM needs to be run in new thread
     @player_thread = Thread.new do
       EM.run do
+        EM.set_quantum 5
+
         EM.connect(@address, @port, Connection) do |c|
           @player = c
         end #-- em_connect
@@ -69,10 +67,12 @@ class MPD
   end
 
   def next
-    # TODO
+    @player.elapsed = 0
+    method "next"
   end
 
   def previous
+    @player.elapsed = 0
     method "previous"
   end
 
@@ -94,7 +94,7 @@ class MPD
   private
 
   def method(cmd)
-    debug "\t-#{__method__}"
+    #debug "\t-#{__method__}"
     @player.execute cmd
   end
 

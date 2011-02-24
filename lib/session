@@ -181,8 +181,7 @@ set showcmd
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
 set termencoding=utf-8
-set updatetime=200
-set window=40
+set window=41
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -191,10 +190,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 connection.rb
-badd +0 em-librmpd.rb
+badd +20 ~/Programowanie/ruby-gtk/em-librmpd/lib/connection.rb
+badd +96 ~/infochimps_dataset_13361_download_16684/chunk.json
+badd +0 ~/Programowanie/ruby-gtk/em-librmpd/lib/em-librmpd.rb
 silent! argdel *
-edit em-librmpd.rb
+edit ~/Programowanie/ruby-gtk/em-librmpd/lib/em-librmpd.rb
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -204,154 +204,9 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 69 + 77) / 154)
-exe 'vert 2resize ' . ((&columns * 84 + 77) / 154)
+exe 'vert 1resize ' . ((&columns * 77 + 77) / 155)
+exe 'vert 2resize ' . ((&columns * 77 + 77) / 155)
 argglobal
-let s:cpo_save=&cpo
-set cpo&vim
-imap <buffer> <S-Up> <Plug>delimitMateS-Up
-imap <buffer> <S-Down> <Plug>delimitMateS-Down
-imap <buffer> <PageDown> <Plug>delimitMatePageDown
-imap <buffer> <PageUp> <Plug>delimitMatePageUp
-imap <buffer> <End> <Plug>delimitMateEnd
-imap <buffer> <Home> <Plug>delimitMateHome
-imap <buffer> <S-BS> <Plug>delimitMateS-BS
-inoremap <buffer> <Plug>delimitMateJumpMany =len(b:_l_delimitMate_buffer) ? delimitMate#Finish(0) : delimitMate#JumpMany()
-nnoremap <buffer> <silent> g} :exe        "ptjump =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> } :exe          "ptag =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> g] :exe      "stselect =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()"
-nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
-nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
-vnoremap <buffer> <silent> \a} `>a}`<i{
-vnoremap <buffer> <silent> \a{ `>a}`<i{
-vnoremap <buffer> <silent> \a) `>a)`<i(
-vnoremap <buffer> <silent> \a( `>a)`<i(
-vnoremap <buffer> <silent> \a' `>a'`<i'
-vnoremap <buffer> <silent> \a] `>a]`<i[
-vnoremap <buffer> <silent> \a[ `>a]`<i[
-vnoremap <buffer> <silent> \a" `>a"`<i"
-nnoremap <buffer> <silent> g] :exe       "tselect =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> g :exe         "tjump =RubyCursorIdentifier()"
-imap <buffer> <silent> g <Plug>delimitMateJumpMany
-imap <buffer>  <Plug>delimitMateCR
-cnoremap <buffer> <expr>  fugitive#buffer().rev()
-imap <buffer>   <Plug>delimitMateSpace
-imap <buffer> ` <Plug>delimitMate`
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=RubyBalloonexpr()
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=:#
-setlocal commentstring=#\ %s
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-setlocal nocursorline
-setlocal define=^\\s*#\\s*define
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal expandtab
-if &filetype != 'ruby'
-setlocal filetype=ruby
-endif
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-setlocal foldmethod=manual
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldtext=foldtext()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=2
-setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
-setlocal includeexpr=substitute(substitute(v:fname,'::','/','g'),'$','.rb','')
-setlocal indentexpr=GetRubyIndent()
-setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255
-setlocal keywordprg=ri\ -T
-setlocal nolinebreak
-setlocal nolisp
-setlocal nolist
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=rubycomplete#Complete
-setlocal path=.,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/site_ruby/1.9.1,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/site_ruby/1.9.1/i686-linux,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/site_ruby,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/vendor_ruby/1.9.1,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/vendor_ruby/1.9.1/i686-linux,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/vendor_ruby,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/1.9.1,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/1.9.1/i686-linux,~/.rvm/gems/ruby-1.9.2-p0@global/gems/addressable-2.2.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/albino-1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/archive-tar-minitar-0.5.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/atk-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/bluecloth-2.0.9/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/bundler-1.0.3/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/cairo-1.10.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/columnize-0.3.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/em-http-request-0.3.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/escape_utils-0.1.9/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/eventmachine-0.12.10/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gdk_pixbuf2-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gettext-2.1.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gli-1.2.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/glib2-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gtk2-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/hirb-0.3.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/interactive_editor-0.0.6/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/json-1.4.6/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/librmpd-0.1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/linecache19-0.5.11/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/locale-2.0.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/makers-mark-0.1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/nokogiri-1.4.4/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/open4-1.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/pango-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/pkg-config-1.0.7/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/racc-1.4.6/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/rack-1.2.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/rake-0.8.7/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/ruby-debug-base19-0.11.24/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/ruby-debug-ide-0.4.16/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/ruby_core_source-0.1.4/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/showoff-0.3.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/sinatra-1.1.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/sinatra-1.1.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/spoon-0.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/tilt-1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/tilt-1.2.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/wirble-0.1.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/abstract-1.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionmailer-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionmailer-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionpack-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionpack-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activemodel-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activemodel-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activemodel-3.0.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activerecord-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activerecord-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activeresource-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activeresource-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activesupport-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activesupport-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activesupport-3.0.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/annotate-models-1.0.4/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/arel-0.3.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/arel-1.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/builder-2.1.2/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/configuration-1.1.0/lib,~/.rvm/ge
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=.rb
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'ruby'
-setlocal syntax=ruby
-endif
-setlocal tabstop=2
-setlocal tags=./tags,./TAGS,tags,TAGS,~/Programowanie/ruby-gtk/em-librmpd/.git/tags
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-silent! normal! zE
-let s:l = 42 - ((0 * winheight(0) + 19) / 39)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-42
-normal! 0
-wincmd w
-argglobal
-edit connection.rb
 let s:cpo_save=&cpo
 set cpo&vim
 imap <buffer> <S-Up> <Plug>delimitMateS-Up
@@ -488,16 +343,161 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 86 - ((30 * winheight(0) + 19) / 39)
+let s:l = 97 - ((33 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-86
-normal! 024l
+97
+normal! 04l
+wincmd w
+argglobal
+edit ~/Programowanie/ruby-gtk/em-librmpd/lib/connection.rb
+let s:cpo_save=&cpo
+set cpo&vim
+imap <buffer> <S-Up> <Plug>delimitMateS-Up
+imap <buffer> <S-Down> <Plug>delimitMateS-Down
+imap <buffer> <PageDown> <Plug>delimitMatePageDown
+imap <buffer> <PageUp> <Plug>delimitMatePageUp
+imap <buffer> <End> <Plug>delimitMateEnd
+imap <buffer> <Home> <Plug>delimitMateHome
+imap <buffer> <S-BS> <Plug>delimitMateS-BS
+inoremap <buffer> <Plug>delimitMateJumpMany =len(b:_l_delimitMate_buffer) ? delimitMate#Finish(0) : delimitMate#JumpMany()
+nnoremap <buffer> <silent> g} :exe        "ptjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> } :exe          "ptag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g] :exe      "stselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
+vnoremap <buffer> <silent> \a} `>a}`<i{
+vnoremap <buffer> <silent> \a{ `>a}`<i{
+vnoremap <buffer> <silent> \a) `>a)`<i(
+vnoremap <buffer> <silent> \a( `>a)`<i(
+vnoremap <buffer> <silent> \a' `>a'`<i'
+vnoremap <buffer> <silent> \a] `>a]`<i[
+vnoremap <buffer> <silent> \a[ `>a]`<i[
+vnoremap <buffer> <silent> \a" `>a"`<i"
+nnoremap <buffer> <silent> g] :exe       "tselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe         "tjump =RubyCursorIdentifier()"
+imap <buffer> <silent> g <Plug>delimitMateJumpMany
+imap <buffer>  <Plug>delimitMateCR
+cnoremap <buffer> <expr>  fugitive#buffer().rev()
+imap <buffer>   <Plug>delimitMateSpace
+imap <buffer> ` <Plug>delimitMate`
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=RubyBalloonexpr()
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=:#
+setlocal commentstring=#\ %s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+setlocal nocursorline
+setlocal define=^\\s*#\\s*define
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'ruby'
+setlocal filetype=ruby
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+setlocal foldmethod=manual
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldtext=foldtext()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=0
+setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
+setlocal includeexpr=substitute(substitute(v:fname,'::','/','g'),'$','.rb','')
+setlocal indentexpr=GetRubyIndent()
+setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255
+setlocal keywordprg=ri\ -T
+setlocal nolinebreak
+setlocal nolisp
+setlocal nolist
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=rubycomplete#Complete
+setlocal path=.,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/site_ruby/1.9.1,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/site_ruby/1.9.1/i686-linux,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/site_ruby,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/vendor_ruby/1.9.1,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/vendor_ruby/1.9.1/i686-linux,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/vendor_ruby,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/1.9.1,~/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/1.9.1/i686-linux,~/.rvm/gems/ruby-1.9.2-p0@global/gems/addressable-2.2.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/albino-1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/archive-tar-minitar-0.5.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/atk-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/bluecloth-2.0.9/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/bundler-1.0.3/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/cairo-1.10.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/columnize-0.3.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/em-http-request-0.3.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/escape_utils-0.1.9/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/eventmachine-0.12.10/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gdk_pixbuf2-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gettext-2.1.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gli-1.2.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/glib2-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/gtk2-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/hirb-0.3.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/interactive_editor-0.0.6/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/json-1.4.6/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/librmpd-0.1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/linecache19-0.5.11/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/locale-2.0.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/makers-mark-0.1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/nokogiri-1.4.4/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/open4-1.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/pango-0.90.5/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/pkg-config-1.0.7/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/racc-1.4.6/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/rack-1.2.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/rake-0.8.7/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/ruby-debug-base19-0.11.24/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/ruby-debug-ide-0.4.16/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/ruby_core_source-0.1.4/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/showoff-0.3.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/sinatra-1.1.0/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/sinatra-1.1.2/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/spoon-0.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/tilt-1.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/tilt-1.2.1/lib,~/.rvm/gems/ruby-1.9.2-p0@global/gems/wirble-0.1.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/abstract-1.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionmailer-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionmailer-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionpack-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/actionpack-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activemodel-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activemodel-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activemodel-3.0.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activerecord-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activerecord-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activeresource-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activeresource-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activesupport-3.0.0/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activesupport-3.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/activesupport-3.0.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/annotate-models-1.0.4/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/arel-0.3.3/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/arel-1.0.1/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/builder-2.1.2/lib,~/.rvm/gems/ruby-1.9.2-p0@rails3tutorial/gems/configuration-1.1.0/lib,~/.rvm/ge
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=2
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=.rb
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'ruby'
+setlocal syntax=ruby
+endif
+setlocal tabstop=2
+setlocal tags=./tags,./TAGS,tags,TAGS,~/Programowanie/ruby-gtk/em-librmpd/.git/tags
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+silent! normal! zE
+let s:l = 135 - ((13 * winheight(0) + 20) / 40)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+135
+normal! 022l
 wincmd w
 2wincmd w
-exe 'vert 1resize ' . ((&columns * 69 + 77) / 154)
-exe 'vert 2resize ' . ((&columns * 84 + 77) / 154)
+exe 'vert 1resize ' . ((&columns * 77 + 77) / 155)
+exe 'vert 2resize ' . ((&columns * 77 + 77) / 155)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
