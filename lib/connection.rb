@@ -2,7 +2,7 @@ require "rubygems"
 require "eventmachine"
 
 def debug(msg)
-  #puts ":: #{msg}"
+  puts ":: #{msg}"
 end
 
 class Connection < EventMachine::Connection
@@ -13,13 +13,14 @@ class Connection < EventMachine::Connection
 
   # helpers
   attr_accessor :queue
+  attr_accessor :hb_difference, :hb_time
 
   def initialize
     super 
     debug "\t\t-new connection"
     a = %w[connection playlist playlistinfo status
     idle noidle idle_after_our_action 
-    stop pause play]
+    stop pause play next previous]
 
     @actions = {}
     a.each { |e| @actions[e] = self.method("handle_" + e) }
@@ -85,30 +86,34 @@ class Connection < EventMachine::Connection
   end
 
   def state_change(command=nil)
-    @beats = 0
+    @ticks = 0
     current_state = @state
     if command
       if command == "pause"
         if current_state == "play" 
-          cancel_timer
+          cancel_ticker
           @state = "pause"
         else
-          start_timer
+          schedule_ticker
           @state = "play"
         end
       elsif command == "stop"
         @state = "stop"
-        cancel_timer
+        cancel_ticker
       elsif command == "play"
-        start_timer
+        if current_state == "stop"
+          start_ticker
+        else
+          schedule_ticker
+        end
         @state = "play"
       end
     else
       if current_state == "play"
-        cancel_timer
-        start_timer
+        cancel_ticker
+        schedule_ticker
       else
-        cancel_timer
+        cancel_ticker
       end
     end
 
@@ -120,46 +125,55 @@ class Connection < EventMachine::Connection
 
   private
 
-  def cancel_timer
-    if @timer
-      @timer.cancel
-      @timer = nil
+  def cancel_ticker
+    if @ticker
+      @ticker.cancel
+      @ticker = nil
+    end
+
+    if @scheduled_ticker
+      @scheduled_ticker.cancel
     end
   end
 
-  def start_timer
-    if ! @timer
-      difference = @elapsed.ceil - @elapsed
-      puts "DIFFERENCE #{difference}"
+  def schedule_ticker
+    if ! @ticker
+      puts "DIFFERENCE #{@hb_difference}"
       @elapsed = @elapsed.ceil
       @dupa = Time.new.to_f
       puts "dupa #{@dupa}"
-      if difference > 0.1
+      if @hb_difference > 0.1
         puts "Shot Timer"
-        EM::Timer.new(difference) { start_heartbeat_timer }
+        m = @elapsed / 60
+        s = @elapsed % 60
+        @scheduled_ticker = EM::Timer.new(@hb_difference) { 
+          puts "ELAPSED TIME: #{m}:#{s} (#{@elapsed}), time #{@dupa}"
+          start_ticker
+        }
       else
-        start_heartbeat_timer
+        start_ticker
       end # @difference
-    end # @timer
+    end # @ticker
   end
 
-  def start_heartbeat_timer
-      @beats = 0
-      @timer = EM::PeriodicTimer.new(1) do
-        @beats += 1
+  def start_ticker
+      @ticks = 0
+      @ticker = EM::PeriodicTimer.new(1) do
+        @hb_time = Time.new.to_f
+        @ticks += 1 
         @elapsed += 1
-        @int = @elapsed.to_i
-        m = @int / 60
-        s = @int % 60
+        m = @elapsed / 60
+        s = @elapsed % 60
         @dupa = Time.new.to_f - @dupa
-        puts "ELAPSED TIME: #{m}:#{s} (#{@elapsed}), beats: #{@beats}, time #{@dupa}"
-        if @beats > 15
+        puts "ELAPSED TIME: #{m}:#{s} (#{@elapsed}), beats: #{@ticks}, time #{@dupa}"
+        if @ticks > 15
           execute "status"
           send_idle
-          @beats = 0
+          @ticks = 0
         end
       end # EM::PeriodicTimer
   end
+
   def send_command(cmd)
     debug "SEND : #{cmd}"
     send_data cmd + "\r\n"
@@ -202,9 +216,7 @@ class Connection < EventMachine::Connection
 
     msg.each_line { |line| 
       i, type, file = line.split ":"
-      song[id] = i
-      song[type] = type
-      song[file] = file[1..-1]
+      song[id], song[type], song[file] = i, type, file[1..-1]
       a.push song
     }
 
@@ -212,6 +224,11 @@ class Connection < EventMachine::Connection
     debug a.inspect
   end
 
+  def handle_next(msg)
+  end
+
+  def handle_previous(msg)
+  end
 
   def handle_status(msg)
     debug "1"
@@ -228,6 +245,7 @@ class Connection < EventMachine::Connection
       @current_songid = status["songid"].to_i
       @bitrate = status["bitrate"].to_i
       @elapsed = status["elapsed"].to_f
+      @hb_difference = @elapsed.ceil - @elapsed
     end
 
     puts "#{Time.new.to_f}"

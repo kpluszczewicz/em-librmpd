@@ -54,6 +54,12 @@ class MPD
 
   def pause
     if state != "stop"
+      if state == "play"
+        @player.hb_difference = Time.new.to_f - @player.hb_time
+        @player.hb_difference = @player.hb_difference.ceil - @player.hb_difference
+        @player.elapsed += 1
+      end
+
       method "pause"
       @player.state_change "pause"
     end
@@ -78,6 +84,7 @@ class MPD
 
   def stop
     if state != "stop"
+      @player.elapsed = 0
       @player.state_change "stop"
       method "stop"
     end
