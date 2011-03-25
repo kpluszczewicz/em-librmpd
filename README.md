@@ -1,5 +1,5 @@
 # Em-librmpd
-Copyright (C) <2011> by <Kamil Pluszczewicz>
+Copyright (C) 2011 by Kamil Pluszczewicz
 
 Em-librmpd is a going to be simple, powerful, event-oriented library for the
 [Music Player Daemon](http://www.musicpd.org), written in Ruby.
@@ -15,12 +15,13 @@ The old librmpd uses polling to execute it's callbacks. That trick simply genera
 At the time being, em-librmpd make possible to succesfully establish connection to mpd daemon. You can perform simple operations, such as play, pause, stop, next, previous. Also playlist is available as a ruby hash. 
 
 Methods implemented so far:
+
 - play
 - pause
 - next
 - previous
 - stop
-- get_playlist
+- get\_playlist
 - connect
 - disconnect
 
@@ -39,10 +40,11 @@ All functionality is contained in the MPD class. Creating an instance of this
 class is as simple as
 
     require 'rubygems'
-    require 'librmpd-em'
+    require 'librmpd-em' # when this library is shipped as a gem ;)
     
-# params 'localhost' and 6600 are default
     mpd = MPD.new 'localhost', 6600
+
+(params 'localhost' and 6600 are default)
 
 Once you have an instance of the MPD class, start by connecting to the server:
 
