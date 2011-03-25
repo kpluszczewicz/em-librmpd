@@ -6,7 +6,7 @@ Em-librmpd is a going to be simple, powerful, event-oriented library for the
 
 # Goals 
 
-Em-librmpd in opposite to the most known mpd ruby library 'librmpd', uses eventmachine to communite to mpd daemon. 
+Em-librmpd, in contrast to the most known mpd ruby library 'librmpd', uses eventmachine to communite to mpd daemon. 
 
 The old librmpd uses polling to execute it's callbacks. That trick simply generates much net traffic. That is the main reason i decided to write another mpd library.
 
